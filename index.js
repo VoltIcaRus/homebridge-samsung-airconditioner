@@ -83,7 +83,7 @@ getServices: function() {
     
 getHeatingUpOrDwTemperature: function(callback) {
     var body;
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X GET https://192.168.1.33:8888/devices|jq '.Devices[0].Temperatures[0].desired'';
+    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Temperatures[0].desired\'';
     
     this.log(str);
     
@@ -94,7 +94,7 @@ getHeatingUpOrDwTemperature: function(callback) {
                      } else {
                      //this.log('Power function OK');
                      //this.response=stdout;
-                     this.log("희망온도 설정됨");
+                     this.log("TEMPERTURA DESIDERTA");
                      body=parseInt(stdout);
                      this.log(stdout);
                      this.log(body);
@@ -110,7 +110,7 @@ getHeatingUpOrDwTemperature: function(callback) {
 setHeatingUpOrDwTemperature: function(temp, callback) {
     var body;
     
-    str = 'curl -s -X PUT -d \'{"desired": ' + temp + '}\' -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure https://192.168.1.33:8888/devices/0/temperatures/0';
+    str = 'curl -X PUT -d \'{"desired": '+temp+'}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure https://'+this.ip+':8888/devices/0/temperatures/0';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -131,7 +131,7 @@ setHeatingUpOrDwTemperature: function(temp, callback) {
 getCurrentHeaterCoolerState: function (callback) {
     var body;
     
-    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X GET https://192.168.1.33:8888/devices|jq '.Devices[0].Mode.modes[0]'';
+    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Mode.modes[0]\'';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -162,7 +162,7 @@ getCurrentHeaterCoolerState: function (callback) {
 getCurrentTemperature: function(callback) {
     var body;
     
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X GET https://192.168.1.33:8888/devices|jq '.Devices[0].Temperatures[0].current'';
+    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Temperatures[0].current\'';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -174,7 +174,7 @@ getCurrentTemperature: function(callback) {
                      //callback();
                      this.log(stdout);
                      body=parseInt(stdout);
-                     this.log("현재온도: "+body);
+                     this.log("Temperatura corrente: "+body);
                      this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(body);
                      }
                      callback(null, body); //Mettere qui ritorno di stdout? o solo callback()
@@ -186,7 +186,7 @@ getCurrentTemperature: function(callback) {
 getActive: function(callback) {
     var body;
     var OFForON;
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X GET https://192.168.1.33:8888/devices|jq '.Devices[0].Operation.power'';
+    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Operation.power\'';
     
     this.log(str);
     
@@ -206,10 +206,10 @@ getActive: function(callback) {
                      if (this.response == "Off") {
                      callback(null, Characteristic.Active.INACTIVE);
                      } else if (this.response == "On") {
-                     this.log("연결됨");
+                     this.log("Acceso");
                      callback(null, Characteristic.Active.ACTIVE);
                      } else {
-                     this.log(this.response+ "연결안됨");
+                     this.log(this.response+ "NON LO SO");
                      }
                      }.bind(this));
     
@@ -227,11 +227,11 @@ setActive: function(state, callback) {
     this.log(ip);
     var activeFuncion = function(state) {
         if (state==Characteristic.Active.ACTIVE) {
-            str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X PUT -d '{"Operation" : {"power" : "On"}}' https://192.168.1.33:8888/devices/0';
-            console.log("켜짐");
+            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer '+token+'" --cert '+patchCert+' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://'+ip+':8888/devices/0';
+            console.log("ATTIVO");
         } else {
-            console.log("꺼짐");
-            str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X PUT -d '{"Operation" : {"power" : "Off"}}' https://192.168.1.33:8888/devices/0';
+            console.log("INATTIVO");
+            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer '+token+'" --cert '+patchCert+' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://'+ip+':8888/devices/0';
         }
     }
     activeFuncion(state);
@@ -257,14 +257,14 @@ setPowerState: function(powerOn, callback) {
     
     if (powerOn) {
         body=this.setOn
-        this.log("켜짐");
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X PUT -d '{"Operation" : {"power" : "On"}}' https://192.168.1.33:8888/devices/0';
+        this.log("Acceso");
+        str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://'+this.ip+':8888/devices/0';
         //powerOn=false;
         
     } else {
         body=this.setOff;
-        this.log("꺼짐");
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X PUT -d '{"Operation" : {"power" : "Off"}}' https://192.168.1.33:8888/devices/0';
+        this.log("Spengo");
+        str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://'+this.ip+':8888/devices/0';
         //powerOn=true;
     }
     this.log(str);
@@ -290,7 +290,7 @@ getModalita: function(callback) {
    // if (data.setting.power=="OFF") {
     //    callback(null, null);
  //   }
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure -X GET https://192.168.1.33:8888/devices|jq '.Devices[0].Mode.modes[0]'';
+    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Mode.modes[0]\'';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -329,7 +329,7 @@ setModalita: function(state, callback) {
             var body;
            // if (accessory.coolMode){
                 this.log("Setting  AC to COOL")
-                 str = 'curl -s -X PUT -d '{"modes": ["CoolClean"]}' -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure https://192.168.1.33:8888/devices/0/mode';
+                 str =  'curl -X PUT -d \'{"modes": ["Cool"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure https://'+this.ip+':8888/devices/0/mode';
                  this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                                  if(error) {
@@ -349,7 +349,7 @@ setModalita: function(state, callback) {
             var body;
             //if (accessory.heatMode){
                 this.log("Setting  AC to HEAT")
-                str = 'curl -s -X PUT -d '{"modes": ["Wind"]}' -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure https://192.168.1.33:8888/devices/0/mode';
+                str =  'curl -X PUT -d \'{"modes": ["Heat"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure https://'+this.ip+':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                                  if(error) {
@@ -368,7 +368,7 @@ setModalita: function(state, callback) {
     var body;
            // if (accessory.autoMode){
                 this.log("Setting  AC to AUTO")
-                str = 'curl -s -X PUT -d '{"modes": ["Auto"]}' -k -H "Content-Type: application/json" -H "Authorization: Bearer 8G7s7VTGGG" --cert /usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem --insecure https://192.168.1.33:8888/devices/0/mode';
+                str =  'curl -X PUT -d \'{"modes": ["Auto"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure https://'+this.ip+':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                                  if(error) {
