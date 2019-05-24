@@ -83,7 +83,7 @@ getServices: function() {
     
 getHeatingUpOrDwTemperature: function(callback) {
     var body;
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq '.Devices[0].Temperatures[0].desired'';
+    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Temperatures[0].desired\'';
     
     this.log(str);
     
@@ -131,7 +131,7 @@ setHeatingUpOrDwTemperature: function(temp, callback) {
 getCurrentHeaterCoolerState: function (callback) {
     var body;
     
-    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq '.Devices[0].Mode.modes[0]'';
+    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Mode.modes[0]\'';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -162,7 +162,7 @@ getCurrentHeaterCoolerState: function (callback) {
 getCurrentTemperature: function(callback) {
     var body;
     
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq '.Devices[0].Temperatures[0].current'';
+    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Temperatures[0].current\'';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -186,7 +186,7 @@ getCurrentTemperature: function(callback) {
 getActive: function(callback) {
     var body;
     var OFForON;
-    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq '.Devices[0].Operation.power'';
+    str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Operation.power\'';
     
     this.log(str);
     
@@ -290,7 +290,7 @@ getModalita: function(callback) {
    // if (data.setting.power=="OFF") {
     //    callback(null, null);
  //   }
-    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq '.Devices[0].Mode.modes[0]'';
+    str= 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer '+this.token+'" --cert '+this.patchCert+' --insecure -X GET https://'+this.ip+':8888/devices|jq \'.Devices[0].Mode.modes[0]\'';
     this.log(str);
     
     this.execRequest(str, body, function(error, stdout, stderr) {
@@ -387,4 +387,3 @@ setModalita: function(state, callback) {
     
 }    
 };
-
