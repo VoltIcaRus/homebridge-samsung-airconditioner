@@ -291,13 +291,13 @@ SamsungAirco.prototype = {
                 callback();
             }
 
-            if (this.response == "CoolClean") {
+            if (this.response == "CoolClean" || this.response == "Cool") {
                 this.log("냉방청정모드");
                 Characteristic.TargetHeaterCoolerState.COOL;
-            } else if (this.response == "DryClean") {
+            } else if (this.response == "DryClean" || this.response == "Dry") {
                 this.log("제습청정모드");
                 Characteristic.TargetHeaterCoolerState.HEAT;
-            } else if (this.response == "Auto") {
+            } else if (this.response == "Auto" || this.response == "Wind") {
                 this.log("스마트쾌적모드");
                 Characteristic.TargetHeaterCoolerState.AUTO;
             } else {
