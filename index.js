@@ -74,7 +74,7 @@ SamsungAirco.prototype = {
 
     getHeatingUpOrDwTemperature: function(callback) {
         var body;
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[0].Temperatures[0].desired\'';
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].desired\'';
 
         this.log(str);
 
@@ -116,7 +116,7 @@ SamsungAirco.prototype = {
     getCurrentHeaterCoolerState: function(callback) {
         var body;
 
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[0].Mode.modes[0]\'';
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
         this.log(str);
         this.log("getCurrentHeaterCoolerState Start");
         this.execRequest(str, body, function(error, stdout, stderr) {
@@ -127,9 +127,9 @@ SamsungAirco.prototype = {
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
                 this.log(this.response);
-                if (this.response == "Cool") {
+                if (this.response == "CoolClean") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (this.response == "Dry") {
+                } else if (this.response == "DryClean") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (this.response == "Auto") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.INACTIVE);
@@ -144,7 +144,7 @@ SamsungAirco.prototype = {
     getCurrentTemperature: function(callback) {
         var body;
 
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[0].Temperatures[0].current\'';
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].current\'';
         this.log(str);
 
         this.execRequest(str, body, function(error, stdout, stderr) {
@@ -266,7 +266,7 @@ SamsungAirco.prototype = {
         //var response;
         var body;
         this.log("Mettere modalita");
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[0].Mode.modes[0]\'';
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
         this.log(str);
 
         this.execRequest(str, body, function(error, stdout, stderr) {
