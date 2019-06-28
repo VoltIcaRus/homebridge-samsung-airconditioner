@@ -129,10 +129,16 @@ SamsungAirco.prototype = {
                 this.log(this.response);
                 if (this.response == "CoolClean") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else if (this.response == "Cool") {
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else if (this.response == "Dry") {
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (this.response == "DryClean") {
-                    callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else if (this.response == "Wind") {
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);                    
                 } else if (this.response == "Auto") {
-                    callback(null, Characteristic.CurrentHeaterCoolerState.INACTIVE);
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else
                     this.log(this.response + "는 설정에 없는 모드 입니다");
                 //callback();
@@ -285,12 +291,6 @@ SamsungAirco.prototype = {
             if (this.response == "CoolClean") {
                 this.log("냉방청정모드");
                 Characteristic.TargetHeaterCoolerState.COOL;
-            } else if (this.response == "DryClean") {
-                this.log("제습모드");
-                Characteristic.TargetHeaterCoolerState.HEAT;
-            } else if (this.response == "Auto") {
-                this.log("스마트쾌적모드");
-                Characteristic.TargetHeaterCoolerState.AUTO;
             } else {
                 this.log(this.response + "는 설정에 없는 모드입니다.");
             }
@@ -301,40 +301,6 @@ SamsungAirco.prototype = {
     setModalita: function(state, callback) {
 
         switch (state) {
-
-            case Characteristic.TargetHeaterCoolerState.AUTO:
-                var body;
-                this.log("스마트쾌적모드를 설정합니다")
-                str = 'curl -X PUT -d \'{"modes": ["Auto"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
-                this.log(str);
-                this.execRequest(str, body, function(error, stdout, stderr) {
-                    if (error) {
-                        this.log('Power function failed', stderr);
-                        callback(error);
-                    } else {
-                        this.log('Power function OK');
-                        callback();
-                        this.log(stdout);
-                    }
-                }.bind(this));
-                break;
-
-            case Characteristic.TargetHeaterCoolerState.HEAT:
-                var body;
-                this.log("제습청정모드로 설정합니다")
-                str = 'curl -X PUT -d \'{"modes": ["DryClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
-                this.log(str);
-                this.execRequest(str, body, function(error, stdout, stderr) {
-                    if (error) {
-                        this.log('Power function failed', stderr);
-                        callback(error);
-                    } else {
-                        this.log('Power function OK');
-                        callback();
-                        this.log(stdout);
-                    }
-                }.bind(this));
-                break;
                 
             case Characteristic.TargetHeaterCoolerState.COOL:
                 var body;
