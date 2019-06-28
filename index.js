@@ -136,11 +136,11 @@ SamsungAirco.prototype = {
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
                 this.log(this.response);
-                if (this.response == "CoolClean") {
+                if (this.response == "CoolClean" || this.response == "Cool") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (this.response == "DryClean") {
+                } else if (this.response == "DryClean" || this.response == "Dry") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
-                } else if (this.response == "Auto") {
+                } else if (this.response == "Auto" || this.response == "Wind") {
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
                     this.log(this.response + "는 설정에 없는 모드 입니다");
