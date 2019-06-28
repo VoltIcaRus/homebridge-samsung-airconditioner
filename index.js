@@ -128,11 +128,11 @@ SamsungAirco.prototype = {
                 this.response = this.response.substr(1, this.response.length - 3);
                 this.log(this.response);
                 if (this.response == "CoolClean") {
-                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOL);
                 } else if (this.response == "DryClean") {
-                    callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
+                    callback(null, Characteristic.CurrentHeaterCoolerState.HEAT);
                 } else if (this.response == "Auto") {
-                    callback(null, Characteristic.CurrentHeaterCoolerState.INACTIVE);
+                    callback(null, Characteristic.CurrentHeaterCoolerState.AUTO);
                 } else
                     this.log(this.response + "는 설정에 없는 모드 입니다");
                 //callback();
@@ -286,7 +286,7 @@ SamsungAirco.prototype = {
                 this.log("냉방청정모드");
                 Characteristic.TargetHeaterCoolerState.COOL;
             } else if (this.response == "DryClean") {
-                this.log("제습모드");
+                this.log("제습청정모드");
                 Characteristic.TargetHeaterCoolerState.HEAT;
             } else if (this.response == "Auto") {
                 this.log("스마트쾌적모드");
