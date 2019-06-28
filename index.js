@@ -283,7 +283,7 @@ SamsungAirco.prototype = {
             }
 
             if (this.response == "CoolClean") {
-                this.log("냉방모드");
+                this.log("냉방청정모드");
                 Characteristic.TargetHeaterCoolerState.COOL;
             } else if (this.response == "DryClean") {
                 this.log("제습모드");
