@@ -63,6 +63,15 @@ SamsungAirco.prototype = {
             })
             .on('get', this.getHeatingUpOrDwTemperature.bind(this))
             .on('set', this.setHeatingUpOrDwTemperature.bind(this));
+        
+         this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
+            .setProps({
+                minValue: 16,
+                maxValue: 30,
+                minStep: 1
+            })
+            .on('get', this.getHeatingUpOrDwTemperature.bind(this))
+            .on('set', this.setHeatingUpOrDwTemperature.bind(this));
 
 
         var informationService = new Service.AccessoryInformation();
