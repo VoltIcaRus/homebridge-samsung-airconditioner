@@ -200,10 +200,10 @@ SamsungAirco.prototype = {
             if (this.response == "Comode_Off") {
                 callback(null, Characteristic.SWING_DISABLED);
             } else if (this.response == "Comode_Nano") {
-                this.log("무풍모드");
+                this.log("무풍모드 설정됨");
                 callback(null, Characteristic.SWING_ENABLED);
             } else {
-                this.log(this.response + "무풍모드해제");
+                this.log(this.response + "무풍모드해제 설정됨");
             }
         }.bind(this));
 
@@ -221,7 +221,7 @@ SamsungAirco.prototype = {
         this.log(state);
         this.log(ip);
         var activeFuncion = function(state) {
-            if (state == SWING_ENABLED) {
+            if (state == Characteristic.SWING_ENABLED) {
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"options"\ : \"Comode_Nano"\}}\' https://' + ip + ':8888/devices/0/mode';
                 console.log("무풍모드");
             } else {
