@@ -198,10 +198,10 @@ SamsungAirco.prototype = {
 
             }
             if (this.response == "Comode_Off") {
-                callback(null, char.SWING_DISABLED);
+                callback(null, Characteristic.SWING_DISABLED);
             } else if (this.response == "Comode_Nano") {
                 this.log("무풍모드");
-                callback(null, char.SWING_ENABLED);
+                callback(null, Characteristic.SWING_ENABLED);
             } else {
                 this.log(this.response + "무풍모드해제");
             }
