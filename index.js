@@ -71,7 +71,11 @@ SamsungAirco.prototype = {
                 minStep: 1
             })
             .on('get', this.getHeatingUpOrDwTemperature.bind(this))
-            .on('set', this.setHeatingUpOrDwTemperature.bind(this));
+            .on('set', this.setHeatingUpOrDwTemperature.bind(this)); 
+        
+        this.aircoSamsung.getCharacteristic(Characteristic.SwingMode)
+            .on('get', this.getSwingMode.bind(this))
+            .on('set', this.setSwingMode.bind(this));  
 
 
         var informationService = new Service.AccessoryInformation();
@@ -173,7 +177,74 @@ SamsungAirco.prototype = {
 
     },
 
+    getSwingMode: function(callback) {
+        var body;
+        
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Devices[1].Mode.options[1]\'';
 
+        this.log(str);
+
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
+                this.log('Power function failed', stderr);
+                callback(error);
+            } else {
+                this.log('Power function OK');
+                this.log(stdout);
+                this.response = stdout;
+                this.response = this.response.substr(1, this.response.length - 3);
+                this.log(this.response);
+                //callback();
+
+            }
+            if (this.response == "Comode_Off") {
+                callback(null, char.SWING_DISABLED);
+            } else if (this.response == "Comode_Nano") {
+                this.log("무풍모드");
+                callback(null, char.SWING_ENABLED);
+            } else {
+                this.log(this.response + "무풍모드해제");
+            }
+        }.bind(this));
+
+    },
+    
+    
+    setSwingMode: function(state, callback) {
+        var body;
+        var token, ip, patchCert;
+        token = this.token;
+        ip = this.ip;
+        patchCert = this.patchCert;
+
+        this.log("SwingMode");
+        this.log(state);
+        this.log(ip);
+        var activeFuncion = function(state) {
+            if (state == SWING_ENABLED) {
+                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"options"\ : \"Comode_Nano"\}}\' https://' + ip + ':8888/devices/0/mode';
+                console.log("무풍모드");
+            } else {
+                console.log("무풍모드해제");
+                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"options"\ : \"Comode_Off"\}}\' https://' + ip + ':8888/devices/0/mode';
+            }
+        }
+        activeFuncion(state);
+        this.log(str);
+
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
+                this.log('Power function failed', stderr);
+            } else {
+                this.log('Power function OK');
+                //callback();
+                this.log(stdout);
+            }
+        }.bind(this));
+        callback();
+    },
+    
+    
     getActive: function(callback) {
         var body;
         var OFForON;
