@@ -222,11 +222,11 @@ SamsungAirco.prototype = {
         this.log(ip);
         var activeFuncion = function(state) {
             if (state == Characteristic.SWING_ENABLED) {
-                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"options"\ : \"Comode_Nano"\}}\' https://' + ip + ':8888/devices/0/mode';
+                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"options" : ["Comode_Nano"]}\' https://' + ip + ':8888/devices/0/mode';
                 console.log("무풍모드");
             } else {
                 console.log("무풍모드해제");
-                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"options"\ : \"Comode_Off"\}}\' https://' + ip + ':8888/devices/0/mode';
+                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"options" : ["Comode_Off"]}\' https://' + ip + ':8888/devices/0/mode';
             }
         }
         activeFuncion(state);
