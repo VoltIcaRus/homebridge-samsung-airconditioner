@@ -198,11 +198,11 @@ SamsungAirco.prototype = {
 
             }
             if (this.response == "Comode_Off") {
-                callback(null, Characteristic.SWING_DISABLED);
+                callback(null, Characteristic.SwingMode.SWING_DISABLED);
                 this.log(this.response + "무풍모드해제 설정됨");
             } else if (this.response == "Comode_Nano") {
                 this.log("무풍모드 설정됨");
-                callback(null, Characteristic.SWING_ENABLED);
+                callback(null, Characteristic.SwingMode.SWING_ENABLED);
             } else {
                 this.log(this.response + "무풍모드 설정 오류");
             }
@@ -222,11 +222,11 @@ SamsungAirco.prototype = {
         this.log(state);
         this.log(ip);
         var activeFuncion = function(state) {
-            if (state == Characteristic.SWING_ENABLED) {
+            if (state == Characteristic.SwingMode.SWING_ENABLED) {
                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"options": ["Comode_Nano"]}\' https://' + this.ip + ':8888/devices/0/mode';
                 console.log("무풍모드");
                  } 
-             else if (state == Characteristic.SWING_DISABLED) {
+             else if (state == Characteristic.SwingMode.SWING_DISABLED) {
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"options": ["Comode_Off"]}\' https://' + this.ip + ':8888/devices/0/mode';
                 console.log("무풍모드해제");
                  } 
