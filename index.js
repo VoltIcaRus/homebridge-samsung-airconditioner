@@ -106,7 +106,7 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 body = parseInt(stdout);
-                this.log("희망온도 확인 : " + body);
+                this.log("희망온도 확인 : " + stdout);
 
                 callback(null, body);
                 //callback();
