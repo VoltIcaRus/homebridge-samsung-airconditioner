@@ -99,8 +99,12 @@ SamsungAirco.prototype = {
 		.on('get', this.getRotationSpeed.bind(this))
 		.on('set', this.setRotationSpeed.bind(this));
 		
-        var informationService = new Service.AccessoryInformation();
-
+        var informationService = new Service.AccessoryInformation()
+            .setCharacteristic(Characteristic.Manufacturer, 'Samsung')
+            .setCharacteristic(Characteristic.Model, 'Air conditioner')
+            .setCharacteristic(Characteristic.SerialNumber, 'AF16K7970WFN');
+	    
+	    
         return [informationService, this.aircoSamsung];
     },
 
