@@ -284,6 +284,37 @@ SamsungAirco.prototype = {
                 break;
         }
     },
+        
+     setPowerState: function(powerOn, callback) {
+        var body;
+        var str;
+        this.log("Il clima per ora è ");
+
+        if (powerOn) {
+            body = this.setOn
+            this.log("켜짐");
+            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + this.ip + ':8888/devices/0';
+
+        } else {
+            body = this.setOff;
+            this.log("꺼짐");
+            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + this.ip + ':8888/devices/0';
+
+        }
+        this.log(str);
+
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
+                this.log('Power function failed', stderr);
+                callback(error);
+            } else {
+                this.log('Power function OK');
+                callback();
+                this.log(stdout);
+            }
+        }.bind(this));
+    },
+
 
     getCurrentHeaterCoolerState: function(callback) {
         var str;
