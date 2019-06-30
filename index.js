@@ -215,33 +215,6 @@ SamsungAirco.prototype = {
         }
     },
     
-    setPowerState: function(powerOn, callback) {
-        var body;
-        var str;
-
-        if (powerOn) {
-            body = this.setOn
-            this.log("전원 켜짐");
-            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + this.ip + ':8888/devices/0';
-
-        } else {
-            body = this.setOff;
-            this.log("전원 꺼짐");
-            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + this.ip + ':8888/devices/0';
-
-        }
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                callback(error);
-            } else {
-                callback();
-                this.log(stdout);
-            }
-        }.bind(this));
-    },
-    
     getActive: function(callback) {
         var str;
         var body;
@@ -273,9 +246,7 @@ SamsungAirco.prototype = {
         token = this.token;
         ip = this.ip;
         patchCert = this.patchCert;
-
-        this.log(state);
-        this.log(ip);
+        
         var activeFuncion = function(state) {
             if (state == Characteristic.Active.ACTIVE) {
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + ip + ':8888/devices/0';
