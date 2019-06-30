@@ -246,7 +246,7 @@ SamsungAirco.prototype = {
             case Characteristic.Active.ACTIVE:
                 var body;
                 this.log("전원 켜짐")
-                str = 'curl -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0';
+                str = 'curl -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
