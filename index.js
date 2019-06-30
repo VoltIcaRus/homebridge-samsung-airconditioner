@@ -106,7 +106,6 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 body = parseInt(stdout);
-                this.log(stdout);
                 this.log("희망온도 확인 : " + body);
 
                 callback(null, body);
@@ -127,7 +126,6 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
             	this.log("희망온도 설정 : " + body);
-                this.log(stdout);
                 callback(null, temp);
                 //callback();
             }
@@ -145,7 +143,6 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 //callback();
-                this.log(stdout);
                 body = parseInt(stdout);
                 this.log("현재온도: " + body);
                 this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(body);
@@ -229,7 +226,6 @@ SamsungAirco.prototype = {
             } else {
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
-                this.log(this.response);
             if (this.response == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
                 this.log("전원 꺼짐");
@@ -291,7 +287,6 @@ SamsungAirco.prototype = {
             } else {
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
-                this.log(this.response);
                 if (this.response == "CoolClean" || this.response == "Cool") {
                     this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
