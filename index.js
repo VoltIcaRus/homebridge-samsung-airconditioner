@@ -40,7 +40,7 @@ SamsungAirco.prototype = {
         //uuid = UUIDGen.generate(this.accessoryName);
         this.aircoSamsung = new Service.HeaterCooler(this.name);
 
-        //연결 확인
+        //전원 설정
         this.aircoSamsung.getCharacteristic(Characteristic.Active)
             .on('get', this.getActive.bind(this))
             .on('set', this.setActive.bind(this)); //On  or Off
@@ -54,16 +54,15 @@ SamsungAirco.prototype = {
             })
             .on('get', this.getCurrentTemperature.bind(this));
 
-        //현재 모드??
+        //현재 모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState)
-            .on('get', this.getModalita.bind(this))
-            .on('set', this.setModalita.bind(this));
+            .on('set', this.setCurrentHeaterCoolerState.bind(this));
    
-        //
+        //현재 모드 확인
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState)
-            .on('get', this.getModalita.bind(this))
-            .on('set', this.setModalita.bind(this));
+            .on('get', this.getCurrentHeaterCoolerState.bind(this));
 
+        //냉방모드 온도
         this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature)
             .setProps({
                 minValue: 16,
@@ -72,7 +71,8 @@ SamsungAirco.prototype = {
             })
             .on('get', this.getHeatingUpOrDwTemperature.bind(this))
             .on('set', this.setHeatingUpOrDwTemperature.bind(this));
-        
+
+        //난방모드 온도        
          this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
             .setProps({
                 minValue: 16,
@@ -82,9 +82,20 @@ SamsungAirco.prototype = {
             .on('get', this.getHeatingUpOrDwTemperature.bind(this))
             .on('set', this.setHeatingUpOrDwTemperature.bind(this)); 
         
+        //스윙모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.SwingMode)
             .on('get', this.getSwingMode.bind(this))
-            .on('set', this.setSwingMode.bind(this));          
+            .on('set', this.setSwingMode.bind(this));  
+
+        //바람세기 설정        
+        this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
+            .setProps({
+		    	minValue: 1,
+		    	maxValue: 4,
+		    	minStep: 1,
+		    })
+		.on('get', this.getRotationSpeed.bind(this))
+		.on('set', this.getRotationSpeed.bind(this));         
 
 
         var informationService = new Service.AccessoryInformation();
@@ -104,10 +115,9 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                this.log("희망온도 설정됨");
                 body = parseInt(stdout);
                 this.log(stdout);
-                this.log(body);
+                this.log("희망온도 확인 : " + body);
 
                 callback(null, body);
                 //callback();
@@ -126,25 +136,167 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-            	this.log("현재온도 확인");
+            	this.log("희망온도 설정 : " + body);
                 this.log(stdout);
                 callback(null, temp);
                 //callback();
             }
         }.bind(this));
+    },
+    
+    getCurrentTemperature: function(callback) {
+        var body;
 
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].current\'';
+        this.log(str);
+
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
+                callback(error);
+            } else {
+                //callback();
+                this.log(stdout);
+                body = parseInt(stdout);
+                this.log("현재온도: " + body);
+                this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(body);
+            }
+            callback(null, body); //Mettere qui ritorno di stdout? o solo callback()
+        }.bind(this));
 
     },
 
-    getCurrentHeaterCoolerState: function(callback) {
+    getSwingMode: function(callback) {
+        var str;
         var body;
-
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[1]\'';
         this.log(str);
-        this.log("현재 모드 확인");
+
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                //this.log('Power function failed', stderr);
+                callback(error);
+            } else {
+                this.response = stdout;
+                this.response = this.response.substr(1, this.response.length - 3);
+            if (this.response == "Comode_Off") {
+                callback(null, Characteristic.SwingMode.SWING_DISABLED);
+                this.log("무풍모드해제 확인");
+            } else if (this.response == "Comode_Nano") {
+                this.log("무풍모드 확인");
+                callback(null, Characteristic.SwingMode.SWING_ENABLED);
+            } else
+                this.log(this.response + "무풍모드 확인 오류");
+            }
+        }.bind(this));
+
+    },
+    
+    setSwingMode: function(state, callback) {
+
+        switch (state) {
+
+            case Characteristic.SwingMode.SWING_ENABLED:
+                var body;
+                this.log("무풍모드 설정")
+                str = 'curl -X PUT -d \'{"options": ["Comode_Nano"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                this.log(str);
+                this.execRequest(str, body, function(error, stdout, stderr) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback();
+                        this.log(stdout);
+                    }
+                }.bind(this));
+                break;
+
+            case Characteristic.SwingMode.SWING_DISABLED:
+                var body;
+                this.log("무풍모드해제 설정")
+                str = 'curl -X PUT -d \'{"modes": ["Comode_Off"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                this.log(str);
+                this.execRequest(str, body, function(error, stdout, stderr) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback();
+                        this.log(stdout);
+                    }
+                }.bind(this));
+                break;
+        }
+    }
+    
+    
+    getActive: function(callback) {
+        var str;
+        var body;
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Operation.power\'';
+        this.log(str);
+
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
+                callback(error);
+            } else {
+                this.response = stdout;
+                this.response = this.response.substr(1, this.response.length - 3);
+                this.log(this.response);
+            if (this.response == "Off") {
+                callback(null, Characteristic.Active.INACTIVE);
+                this.log("전원 꺼짐");
+            } else if (this.response == "On") {
+                this.log("전원 켜짐");
+                callback(null, Characteristic.Active.ACTIVE);
+            } else
+                this.log(this.response + "연결 오류");
+            }
+        }.bind(this));
+
+    },
+
+    setActive: function(state, callback) {
+ 
+        switch (state) {
+
+            case Characteristic.Active.ACTIVE:
+                var body;
+                this.log("전원 켜짐")
+                str = 'curl -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0';
+                this.log(str);
+                this.execRequest(str, body, function(error, stdout, stderr) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback();
+                        this.log(stdout);
+                    }
+                }.bind(this));
+                break;
+
+            case Characteristic.Characteristic.Active.INACTIVE:
+                var body;
+                this.log("전원 꺼짐")
+                str = 'curl -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0';
+                this.log(str);
+                this.execRequest(str, body, function(error, stdout, stderr) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback();
+                        this.log(stdout);
+                    }
+                }.bind(this));
+                break;
+        }
+    },
+
+    getCurrentHeaterCoolerState: function(callback) {
+        var str;
+        var body;
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
+        this.log(str);
+
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
                 callback(error);
             } else {
                 this.response = stdout;
@@ -165,250 +317,20 @@ SamsungAirco.prototype = {
             }
         }.bind(this));
     },
-
-    getCurrentTemperature: function(callback) {
-        var body;
-
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].current\'';
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('연결 오류-현재 온도', stderr);
-                callback(error);
-            } else {
-                this.log('연결됨-현재 온도');
-                //callback();
-                this.log(stdout);
-                body = parseInt(stdout);
-                this.log("현재온도: " + body);
-                this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(body);
-            }
-            callback(null, body); //Mettere qui ritorno di stdout? o solo callback()
-        }.bind(this));
-
-    },
-
-    getSwingMode: function(callback) {
-        var body;
-        
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[1]\'';
-
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('연결 오류-Swing', stderr);
-                callback(error);
-            } else {
-                this.log(stdout);
-                this.response = stdout;
-                this.response = this.response.substr(1, this.response.length - 3);
-                this.log(this.response);
-                //callback();
-
-            }
-            if (this.response == "Comode_Off") {
-                callback(null, Characteristic.SwingMode.SWING_DISABLED);
-                this.log(this.response + "무풍모드해제 설정됨");
-            } else if (this.response == "Comode_Nano") {
-                this.log("무풍모드 설정됨");
-                callback(null, Characteristic.SwingMode.SWING_ENABLED);
-            } else {
-                this.log(this.response + "무풍모드 설정 오류");
-            }
-        }.bind(this));
-
-    },
     
-    
-    setSwingMode: function(state, callback) {
-        var body;
-        var token, ip, patchCert;
-        token = this.token;
-        ip = this.ip;
-        patchCert = this.patchCert;
-
-        this.log("스윙모드 확인");
-        this.log(state);
-        this.log(ip);
-        var activeFuncion = function(state) {
-            if (state == Characteristic.SwingMode.SWING_ENABLED) {
-               str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"options": ["Comode_Nano"]}\' https://' + ip + ':8888/devices/0/mode';
-                console.log("무풍모드");
-                 } 
-             else if (state == Characteristic.SwingMode.SWING_DISABLED) {
-                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"options": ["Comode_Off"]}\' https://' + ip + ':8888/devices/0/mode';
-                console.log("무풍모드해제");
-                 } 
-            else {
-                console.log("무풍모드 오류");
-            }
-        }
-        activeFuncion(state);
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('연결 오류-스윙모드', stderr);
-            } else {
-                this.log('연결됨-스슁모드');
-                //callback();
-                this.log(stdout);
-            }
-        }.bind(this));
-        callback();
-    },
-    
-    
-    getActive: function(callback) {
-        var body;
-        var OFForON;
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Operation.power\'';
-
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('연결 오류-활성', stderr);
-                callback(error);
-            } else {
-                this.log('연결됨-활성');
-                this.log(stdout);
-                this.response = stdout;
-                this.response = this.response.substr(1, this.response.length - 3);
-                this.log(this.response);
-                //callback();
-
-            }
-            if (this.response == "Off") {
-                callback(null, Characteristic.Active.INACTIVE);
-            } else if (this.response == "On") {
-                this.log("전원 켜짐");
-                callback(null, Characteristic.Active.ACTIVE);
-            } else {
-                this.log(this.response + "연결 오류");
-            }
-        }.bind(this));
-
-    },
-
-    setActive: function(state, callback) {
-        var body;
-        var token, ip, patchCert;
-        token = this.token;
-        ip = this.ip;
-        patchCert = this.patchCert;
-
-        this.log("연결 설정");
-        this.log(state);
-        this.log(ip);
-        var activeFuncion = function(state) {
-            if (state == Characteristic.Active.ACTIVE) {
-                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + ip + ':8888/devices/0';
-                console.log("켜짐");
-            } else {
-                console.log("꺼짐");
-                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + ip + ':8888/devices/0';
-            }
-        }
-        activeFuncion(state);
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('연결 오류-활성', stderr);
-            } else {
-                this.log('연결됨-활성');
-                //callback();
-                this.log(stdout);
-            }
-        }.bind(this));
-        callback();
-    },
-
-    setPowerState: function(powerOn, callback) {
-        var body;
-        var str;
-        this.log("전원 설정");
-
-        if (powerOn) {
-            body = this.setOn
-            this.log("켜짐");
-            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + this.ip + ':8888/devices/0';
-
-        } else {
-            body = this.setOff;
-            this.log("꺼짐");
-            str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + this.ip + ':8888/devices/0';
-
-        }
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('전원 설정 실패', stderr);
-                callback(error);
-            } else {
-                this.log('전원 설정 확인');
-                callback();
-                this.log(stdout);
-            }
-        }.bind(this));
-    },
-
-    getModalita: function(callback) {
-        var str;
-        //var response;
-        var body;
-        this.log("모드 설정 확인");
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
-        this.log(str);
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                this.log('Power function failed', stderr);
-                callback(error);
-            } else {
-                this.log('Power function OK');
-                this.log(stdout);
-                this.response = stdout;
-                this.response = this.response.substr(1, this.response.length - 3);
-                this.log(this.response);
-                callback();
-            }
-
-            if (this.response == "CoolClean" || this.response == "Cool") {
-                this.log("냉방청정모드 확인");
-                Characteristic.TargetHeaterCoolerState.COOL;
-            } else if (this.response == "DryClean" || this.response == "Dry") {
-                this.log("제습청정모드 확인");
-                Characteristic.TargetHeaterCoolerState.HEAT;
-            } else if (this.response == "Auto" || this.response == "Wind") {
-                this.log("스마트쾌적모드 확인");
-                Characteristic.TargetHeaterCoolerState.AUTO;
-            } else {
-                this.log(this.response + "는 설정에 없는 모드임");
-            }
-
-        }.bind(this));
-
-    },
-    setModalita: function(state, callback) {
+    setCurrentHeaterCoolerState: function(state, callback) {
 
         switch (state) {
 
             case Characteristic.TargetHeaterCoolerState.AUTO:
                 var body;
-                this.log("공기청정모드로 설정함")
+                this.log("공기청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["Wind"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
-                        this.log('Power function failed', stderr);
                         callback(error);
                     } else {
-                        this.log('Power function OK');
                         callback();
                         this.log(stdout);
                     }
@@ -417,15 +339,13 @@ SamsungAirco.prototype = {
 
             case Characteristic.TargetHeaterCoolerState.HEAT:
                 var body;
-                this.log("제습청정모드로 설정함")
+                this.log("제습청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["DryClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
-                        this.log('Power function failed', stderr);
                         callback(error);
                     } else {
-                        this.log('Power function OK');
                         callback();
                         this.log(stdout);
                     }
@@ -434,15 +354,13 @@ SamsungAirco.prototype = {
                 
             case Characteristic.TargetHeaterCoolerState.COOL:
                 var body;
-                this.log("냉방청정모드로 설정함")
+                this.log("냉방청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["CoolClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
-                        this.log('Power function failed', stderr);
                         callback(error);
                     } else {
-                        this.log('Power function OK');
                         callback();
                         this.log(stdout);
                     }
