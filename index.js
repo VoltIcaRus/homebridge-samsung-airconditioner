@@ -85,17 +85,7 @@ SamsungAirco.prototype = {
         //스윙모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.SwingMode)
             .on('get', this.getSwingMode.bind(this))
-            .on('set', this.setSwingMode.bind(this));  
-
-        //바람세기 설정        
-        this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
-            .setProps({
-		    	minValue: 1,
-		    	maxValue: 4,
-		    	minStep: 1,
-		    })
-		.on('get', this.getRotationSpeed.bind(this))
-		.on('set', this.getRotationSpeed.bind(this));         
+            .on('set', this.setSwingMode.bind(this));         
 
 
         var informationService = new Service.AccessoryInformation();
@@ -403,7 +393,7 @@ SamsungAirco.prototype = {
         }.bind(this));
 
     },
-    setModalita: function(state, callback) {
+    setCurrentHeaterCoolerState: function(state, callback) {
 
         switch (state) {
 
