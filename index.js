@@ -218,26 +218,32 @@ SamsungAirco.prototype = {
     
     
     getActive: function(callback) {
-        var str;
         var body;
+        var OFForON;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Operation.power\'';
+
         this.log(str);
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
+                this.log('Power function failed', stderr);
                 callback(error);
             } else {
+                this.log('Power function OK');
+                this.log(stdout);
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
                 this.log(this.response);
+                //callback();
+
+            }
             if (this.response == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
-                this.log("전원 꺼짐");
             } else if (this.response == "On") {
-                this.log("전원 켜짐");
+                this.log("연결됨");
                 callback(null, Characteristic.Active.ACTIVE);
-            } else
-                this.log(this.response + "연결 오류");
+            } else {
+                this.log(this.response + "연결안됨");
             }
         }.bind(this));
 
