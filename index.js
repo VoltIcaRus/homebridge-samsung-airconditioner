@@ -191,7 +191,7 @@ SamsungAirco.prototype = {
             case 1:
                 var body;
                 this.log("자동풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
@@ -206,7 +206,7 @@ SamsungAirco.prototype = {
             case 2:
                 var body;
                 this.log("미풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 1}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                str = 'curl -X PUT -d \'{"speedLevel": 1}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
@@ -221,7 +221,7 @@ SamsungAirco.prototype = {
             case 3:
                 var body;
                 this.log("약풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 2}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                str = 'curl -X PUT -d \'{"speedLevel": 2}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
@@ -236,7 +236,7 @@ SamsungAirco.prototype = {
             case 4:
                 var body;
                 this.log("강풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
@@ -251,7 +251,7 @@ SamsungAirco.prototype = {
             case 5:
                 var body;
                 this.log("터보풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
