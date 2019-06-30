@@ -30,7 +30,7 @@ SamsungAirco.prototype = {
         //return stdout;
     },
     identify: function(callback) {
-        this.log("Identify the clima!");
+        this.log("장치 확인됨");
         callback(); // success
     },
 
@@ -40,8 +40,12 @@ SamsungAirco.prototype = {
         //uuid = UUIDGen.generate(this.accessoryName);
         this.aircoSamsung = new Service.HeaterCooler(this.name);
 
-        this.aircoSamsung.getCharacteristic(Characteristic.Active).on('get', this.getActive.bind(this)).on('set', this.setActive.bind(this)); //On  or Off
+        //연결 확인
+        this.aircoSamsung.getCharacteristic(Characteristic.Active)
+            .on('get', this.getActive.bind(this))
+            .on('set', this.setActive.bind(this)); //On  or Off
 
+        //현재 온도
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature)
             .setProps({
                 minValue: 0,
@@ -50,10 +54,15 @@ SamsungAirco.prototype = {
             })
             .on('get', this.getCurrentTemperature.bind(this));
 
-        this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).on('get', this.getModalita.bind(this)).on('set', this.setModalita.bind(this));
-
+        //현재 모드??
+        this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState)
+            .on('get', this.getModalita.bind(this))
+            .on('set', this.setModalita.bind(this));
+   
+        //
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState)
-            .on('get', this.getCurrentHeaterCoolerState.bind(this));
+            .on('get', this.getModalita.bind(this))
+            .on('set', this.setModalita.bind(this));
 
         this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature)
             .setProps({
@@ -75,7 +84,7 @@ SamsungAirco.prototype = {
         
         this.aircoSamsung.getCharacteristic(Characteristic.SwingMode)
             .on('get', this.getSwingMode.bind(this))
-            .on('set', this.setSwingMode.bind(this));  
+            .on('set', this.setSwingMode.bind(this));          
 
 
         var informationService = new Service.AccessoryInformation();
@@ -117,6 +126,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
+            	this.log("현재온도 확인");
                 this.log(stdout);
                 callback(null, temp);
                 //callback();
@@ -131,7 +141,7 @@ SamsungAirco.prototype = {
 
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
         this.log(str);
-        this.log("getCurrentHeaterCoolerState Start");
+        this.log("현재 모드 확인");
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
                 //this.log('Power function failed', stderr);
@@ -141,17 +151,19 @@ SamsungAirco.prototype = {
                 this.response = this.response.substr(1, this.response.length - 3);
                 this.log(this.response);
                 if (this.response == "CoolClean" || this.response == "Cool") {
+                    this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (this.response == "DryClean" || this.response == "Dry") {
+                    this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (this.response == "Auto" || this.response == "Wind") {
+                	this.log("공기청정모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
                     this.log(this.response + "는 설정에 없는 모드 입니다");
                 //callback();
             }
         }.bind(this));
-        this.log("getCurrentHeaterCoolerState End");
     },
 
     getCurrentTemperature: function(callback) {
@@ -162,10 +174,10 @@ SamsungAirco.prototype = {
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                this.log('Power function failed', stderr);
+                this.log('연결 오류-현재 온도', stderr);
                 callback(error);
             } else {
-                this.log('Power function OK');
+                this.log('연결됨-현재 온도');
                 //callback();
                 this.log(stdout);
                 body = parseInt(stdout);
@@ -186,10 +198,9 @@ SamsungAirco.prototype = {
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                this.log('Power function failed', stderr);
+                this.log('연결 오류-Swing', stderr);
                 callback(error);
             } else {
-                this.log('Power function OK');
                 this.log(stdout);
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
@@ -218,7 +229,7 @@ SamsungAirco.prototype = {
         ip = this.ip;
         patchCert = this.patchCert;
 
-        this.log("SwingMode");
+        this.log("스윙모드 확인");
         this.log(state);
         this.log(ip);
         var activeFuncion = function(state) {
@@ -239,9 +250,9 @@ SamsungAirco.prototype = {
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                this.log('Power function failed', stderr);
+                this.log('연결 오류-스윙모드', stderr);
             } else {
-                this.log('Power function OK');
+                this.log('연결됨-스슁모드');
                 //callback();
                 this.log(stdout);
             }
@@ -259,10 +270,10 @@ SamsungAirco.prototype = {
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                this.log('Power function failed', stderr);
+                this.log('연결 오류-활성', stderr);
                 callback(error);
             } else {
-                this.log('Power function OK');
+                this.log('연결됨-활성');
                 this.log(stdout);
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
@@ -273,10 +284,10 @@ SamsungAirco.prototype = {
             if (this.response == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
             } else if (this.response == "On") {
-                this.log("연결됨");
+                this.log("전원 켜짐");
                 callback(null, Characteristic.Active.ACTIVE);
             } else {
-                this.log(this.response + "연결안됨");
+                this.log(this.response + "연결 오류");
             }
         }.bind(this));
 
@@ -289,7 +300,7 @@ SamsungAirco.prototype = {
         ip = this.ip;
         patchCert = this.patchCert;
 
-        this.log("COSA E");
+        this.log("연결 설정");
         this.log(state);
         this.log(ip);
         var activeFuncion = function(state) {
@@ -306,9 +317,9 @@ SamsungAirco.prototype = {
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                this.log('Power function failed', stderr);
+                this.log('연결 오류-활성', stderr);
             } else {
-                this.log('Power function OK');
+                this.log('연결됨-활성');
                 //callback();
                 this.log(stdout);
             }
@@ -319,7 +330,7 @@ SamsungAirco.prototype = {
     setPowerState: function(powerOn, callback) {
         var body;
         var str;
-        this.log("Il clima per ora è ");
+        this.log("전원 설정");
 
         if (powerOn) {
             body = this.setOn
@@ -336,10 +347,10 @@ SamsungAirco.prototype = {
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
-                this.log('Power function failed', stderr);
+                this.log('전원 설정 실패', stderr);
                 callback(error);
             } else {
-                this.log('Power function OK');
+                this.log('전원 설정 확인');
                 callback();
                 this.log(stdout);
             }
@@ -350,7 +361,7 @@ SamsungAirco.prototype = {
         var str;
         //var response;
         var body;
-        this.log("Mettere modalita");
+        this.log("모드 설정 확인");
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
         this.log(str);
 
@@ -368,16 +379,16 @@ SamsungAirco.prototype = {
             }
 
             if (this.response == "CoolClean" || this.response == "Cool") {
-                this.log("냉방청정모드");
+                this.log("냉방청정모드 확인");
                 Characteristic.TargetHeaterCoolerState.COOL;
             } else if (this.response == "DryClean" || this.response == "Dry") {
-                this.log("제습청정모드");
+                this.log("제습청정모드 확인");
                 Characteristic.TargetHeaterCoolerState.HEAT;
             } else if (this.response == "Auto" || this.response == "Wind") {
-                this.log("스마트쾌적모드");
+                this.log("스마트쾌적모드 확인");
                 Characteristic.TargetHeaterCoolerState.AUTO;
             } else {
-                this.log(this.response + "는 설정에 없는 모드입니다.");
+                this.log(this.response + "는 설정에 없는 모드임");
             }
 
         }.bind(this));
@@ -389,8 +400,8 @@ SamsungAirco.prototype = {
 
             case Characteristic.TargetHeaterCoolerState.AUTO:
                 var body;
-                this.log("스마트쾌적모드를 설정합니다")
-                str = 'curl -X PUT -d \'{"modes": ["Auto"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
+                this.log("공기청정모드로 설정함")
+                str = 'curl -X PUT -d \'{"modes": ["Wind"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
@@ -406,7 +417,7 @@ SamsungAirco.prototype = {
 
             case Characteristic.TargetHeaterCoolerState.HEAT:
                 var body;
-                this.log("제습청정모드로 설정합니다")
+                this.log("제습청정모드로 설정함")
                 str = 'curl -X PUT -d \'{"modes": ["DryClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -423,7 +434,7 @@ SamsungAirco.prototype = {
                 
             case Characteristic.TargetHeaterCoolerState.COOL:
                 var body;
-                this.log("냉방청정모드를 설정합니다")
+                this.log("냉방청정모드로 설정함")
                 str = 'curl -X PUT -d \'{"modes": ["CoolClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
