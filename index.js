@@ -56,10 +56,12 @@ SamsungAirco.prototype = {
 
         //현재 모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState)
-            .on('set', this.setCurrentHeaterCoolerState.bind(this));
+            .on('set', this.setCurrentHeaterCoolerState.bind(this))       
+            .on('get', this.getCurrentHeaterCoolerState.bind(this));
    
         //현재 모드 확인
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState)
+            .on('set', this.setCurrentHeaterCoolerState.bind(this))       
             .on('get', this.getCurrentHeaterCoolerState.bind(this));
 
         //냉방모드 온도
