@@ -175,7 +175,7 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 //callback();
-                body = parseInt(stdout) + 1;
+                body = parseInt(stdout);
                 this.log("현재풍속: " + body);
                 this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(body);
             }
@@ -251,7 +251,7 @@ SamsungAirco.prototype = {
             case 5:
                 var body;
                 this.log("터보풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
+                str = 'curl -X PUT -d \'{"speedLevel": 4}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
                 this.log(str);
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
