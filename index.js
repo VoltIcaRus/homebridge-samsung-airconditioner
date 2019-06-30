@@ -92,7 +92,7 @@ SamsungAirco.prototype = {
         //바람세기 설정        
         this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({
-		    	minValue: 1,
+		    	minValue: 0,
 		    	maxValue: 5,
 		    	minStep: 1,
 		    })
