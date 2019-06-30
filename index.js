@@ -92,8 +92,8 @@ SamsungAirco.prototype = {
         //바람세기 설정        
         this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({
-		    	minValue: 0,
-		    	maxValue: 4,
+		    	minValue: 1,
+		    	maxValue: 5,
 		    	minStep: 1,
 		    })
 		.on('get', this.getRotationSpeed.bind(this))
@@ -175,7 +175,7 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 //callback();
-                body = parseInt(stdout);
+                body = parseInt(stdout) + 1;
                 this.log("현재풍속: " + body);
                 this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(body);
             }
@@ -188,7 +188,7 @@ SamsungAirco.prototype = {
 
         switch (state) {
 
-            case 0:
+            case 1:
                 var body;
                 this.log("자동풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
@@ -203,7 +203,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;
 
-            case 1:
+            case 2:
                 var body;
                 this.log("미풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 1}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
@@ -218,7 +218,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;
                 
-            case 2:
+            case 3:
                 var body;
                 this.log("약풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 2}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
@@ -233,7 +233,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;
                 
-            case 3:
+            case 4:
                 var body;
                 this.log("강풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
@@ -248,7 +248,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;                
 
-            case 4:
+            case 5:
                 var body;
                 this.log("터보풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 3}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
