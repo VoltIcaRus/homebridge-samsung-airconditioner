@@ -43,7 +43,7 @@ SamsungAirco.prototype = {
         //전원 설정
         this.aircoSamsung.getCharacteristic(Characteristic.Active)
             .on('get', this.getActive.bind(this))
-            .on('set', this.setActive.bind(this)); //On  or Off
+            .on('set', this.setActive.bind(this));
 
         //현재 온도
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature)
@@ -269,14 +269,20 @@ SamsungAirco.prototype = {
 
     setActive: function(state, callback) {
         var body;
+        var token, ip, patchCert;
+        token = this.token;
+        ip = this.ip;
+        patchCert = this.patchCert;
+
         this.log(state);
+        this.log(ip);
         var activeFuncion = function(state) {
             if (state == Characteristic.Active.ACTIVE) {
-                str = 'curl -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0';
+                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + ip + ':8888/devices/0';
                 console.log("전원 켜짐");
             } else {
                 console.log("전원 꺼짐");
-                str = 'curl -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0';
+                str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + ip + ':8888/devices/0';
             }
         }
         activeFuncion(state);
@@ -285,6 +291,7 @@ SamsungAirco.prototype = {
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
             } else {
+                //callback();
                 this.log(stdout);
             }
         }.bind(this));
