@@ -175,7 +175,7 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 //callback();
-                body = parseInt(stdout);
+                body = parseInt(stdout)+1;
                 this.log("현재풍속: " + body);
                 this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(body);
             }
