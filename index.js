@@ -30,7 +30,7 @@ SamsungAirco.prototype = {
         //return stdout;
     },
     identify: function(callback) {
-        this.log("Identify the clima!");
+        this.log("장치 확인됨");
         callback(); // success
     },
 
@@ -40,8 +40,12 @@ SamsungAirco.prototype = {
         //uuid = UUIDGen.generate(this.accessoryName);
         this.aircoSamsung = new Service.HeaterCooler(this.name);
 
-        this.aircoSamsung.getCharacteristic(Characteristic.Active).on('get', this.getActive.bind(this)).on('set', this.setActive.bind(this)); //On  or Off
+        //전원 설정
+        this.aircoSamsung.getCharacteristic(Characteristic.Active)
+            .on('get', this.getActive.bind(this))
+            .on('set', this.setActive.bind(this)); //On  or Off
 
+        //현재 온도
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature)
             .setProps({
                 minValue: 0,
@@ -50,11 +54,15 @@ SamsungAirco.prototype = {
             })
             .on('get', this.getCurrentTemperature.bind(this));
 
-        this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).on('get', this.getModalita.bind(this)).on('set', this.setModalita.bind(this));
-
+        //현재 모드 설정
+        this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState)
+            .on('set', this.setCurrentHeaterCoolerState.bind(this));
+   
+        //현재 모드 확인
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState)
             .on('get', this.getCurrentHeaterCoolerState.bind(this));
 
+        //냉방모드 온도
         this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature)
             .setProps({
                 minValue: 16,
@@ -63,7 +71,8 @@ SamsungAirco.prototype = {
             })
             .on('get', this.getHeatingUpOrDwTemperature.bind(this))
             .on('set', this.setHeatingUpOrDwTemperature.bind(this));
-        
+
+        //난방모드 온도        
          this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
             .setProps({
                 minValue: 16,
@@ -73,9 +82,20 @@ SamsungAirco.prototype = {
             .on('get', this.getHeatingUpOrDwTemperature.bind(this))
             .on('set', this.setHeatingUpOrDwTemperature.bind(this)); 
         
+        //스윙모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.SwingMode)
             .on('get', this.getSwingMode.bind(this))
             .on('set', this.setSwingMode.bind(this));  
+
+        //바람세기 설정        
+        this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
+            .setProps({
+		    	minValue: 1,
+		    	maxValue: 4,
+		    	minStep: 1,
+		    })
+		.on('get', this.getRotationSpeed.bind(this))
+		.on('set', this.getRotationSpeed.bind(this));         
 
 
         var informationService = new Service.AccessoryInformation();
