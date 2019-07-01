@@ -92,7 +92,7 @@ SamsungAirco.prototype = {
         this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({
 		    	minValue: 0,
-		    	maxValue: 2,
+		    	maxValue: 3,
 		    	minStep: 1,
 		    })
 		.on('get', this.getRotationSpeed.bind(this))
