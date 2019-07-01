@@ -1,12 +1,12 @@
 {
-  "name": "homebridge-samsung-airconditioner",
+  "name": "homebridge-samsung-airpurifier",
   "version": "0.1.0",
-  "description": "node.js plugin for the Samsung smart samsung-airconditioners",
+  "description": "node.js plugin for the Samsung smart samsung-airpurifiers",
 "main" : "index.js",
  
   "keywords": [
     "Samsung",
-    "Air Conditioner",
+    "Air purifier",
 "homebridge-plugin"
   ],
   "engines": {
