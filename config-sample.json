@@ -6,22 +6,22 @@
 		"pin": "031-45-154"
 	},
 
-	"description": "This is an example configuration for the Samsung Airpurifier homebridge plugin",
+	"description": "This is an example configuration for the Samsung Airconditioner homebridge plugin",
 
 	"accessories": [
 		{
-			"accessory": "SamsungAirpurifier",
+			"accessory": "SamsungAirconditioner",
 			"name": "Climatizzatore",
 "ip": "192.168.1.201",
 "token": "xxxxx",
-"patchCert": "/usr/local/lib/node_modules/homebridge-samsung-airpurifier/ac14k_m.pem"
+"patchCert": "/usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem"
 		},
 {
-			"accessory": "SamsungAirpurifier",
+			"accessory": "SamsungAirconditioner",
 			"name": "Climatizzatore2",
 "ip": "192.168.1.21",
 "token": "xxxxxx",
-"patchCert": "/usr/local/lib/node_modules/homebridge-samsung-airpurifier/ac14k_m.pem"
+"patchCert": "/usr/local/lib/node_modules/homebridge-samsung-airconditioner/ac14k_m.pem"
 		}
 	]
 }
