@@ -355,7 +355,7 @@ SamsungAirco.prototype = {
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else
                     this.log(this.response + "는 설정에 없는 모드 입니다");
-                    callback(null, Characteristic.CurrentHeaterCoolerState.INACTIVE);
+                    callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 //callback();
             }
         }.bind(this));
