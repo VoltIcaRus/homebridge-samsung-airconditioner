@@ -16,9 +16,6 @@ function SamsungAirco(log, config) {
     this.ip = config["ip"];
     this.token = config["token"];
     this.patchCert = config["patchCert"];
-    this.accessoryName = config["name"];
-    this.setOn = true;
-    this.setOff = false;
 }
 
 SamsungAirco.prototype = {
