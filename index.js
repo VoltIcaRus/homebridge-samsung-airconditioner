@@ -328,9 +328,9 @@ SamsungAirco.prototype = {
         var activeFuncion = function(state) {
             if (state == Characteristic.Active.ACTIVE) {
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + ip + ':8888/devices/0';
-                //console.log("활성화 설정");
+                console.log("활성화 설정");
             } else {
-                //console.log("비활성화 설정");
+                console.log("비활성화 설정");
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + ip + ':8888/devices/0';
             }
         }
@@ -364,7 +364,7 @@ SamsungAirco.prototype = {
                     //this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (this.response == "Auto" || this.response == "Wind") {
-                    //this.log("공기청정모드 확인");
+                	//this.log("공기청정모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
                     //this.log(this.response + "는 설정에 없는 모드 입니다");
