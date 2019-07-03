@@ -30,7 +30,7 @@ SamsungAirco.prototype = {
         //return stdout;
     },
     identify: function(callback) {
-        this.log("장치 확인됨");
+        //this.log("장치 확인됨");
         callback(); // success
     },
 
@@ -119,7 +119,7 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 body = parseInt(stdout);
-                this.log("희망온도 확인 : " + stdout);
+                //this.log("희망온도 확인 : " + stdout);
 
                 callback(null, body);
                 //callback();
@@ -137,7 +137,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-            	this.log("희망온도 설정 : " + body);
+            	//this.log("희망온도 설정 : " + body);
                 callback(null, temp);
                 //callback();
             }
@@ -155,7 +155,7 @@ SamsungAirco.prototype = {
             } else {
                 //callback();
                 body = parseInt(stdout);
-                this.log("현재 온도: " + body);
+                //this.log("현재 온도: " + body);
                 this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(body);
             }
             callback(null, body); //Mettere qui ritorno di stdout? o solo callback()
@@ -174,7 +174,7 @@ SamsungAirco.prototype = {
             } else {
                 //callback();
                 body = 3-parseInt(stdout);
-                this.log("현재 풍속: " + body);
+                //this.log("현재 풍속: " + body);
                 this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(body);
             }
             callback(null, body);
@@ -188,7 +188,7 @@ SamsungAirco.prototype = {
 
             case 3:
                 var body;
-                this.log("자동풍 설정")
+                //this.log("자동풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
  
 	        this.execRequest(str, body, function(error, stdout, stderr) {
@@ -196,14 +196,14 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
 
             case 1:
                 var body;
-                this.log("미풍 설정")
+                //this.log("미풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 1}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
 
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -211,14 +211,14 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
                 
             case 2:
                 var body;
-                this.log("약풍 설정")
+                //this.log("약풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 2}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
 
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -226,7 +226,7 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;              
@@ -246,12 +246,12 @@ SamsungAirco.prototype = {
                 this.response = this.response.substr(1, this.response.length - 3);
             if (this.response == "Comode_Off") {
                 callback(null, Characteristic.SwingMode.SWING_DISABLED);
-                this.log("무풍모드해제 확인");
+                //this.log("무풍모드해제 확인");
             } else if (this.response == "Comode_Nano") {
-                this.log("무풍모드 확인");
+                //this.log("무풍모드 확인");
                 callback(null, Characteristic.SwingMode.SWING_ENABLED);
             } else
-                this.log(this.response + "무풍모드 확인 오류");
+                //this.log(this.response + "무풍모드 확인 오류");
             }
         }.bind(this));
 
@@ -263,7 +263,7 @@ SamsungAirco.prototype = {
 
             case Characteristic.SwingMode.SWING_ENABLED:
                 var body;
-                this.log("무풍모드 설정")
+                //this.log("무풍모드 설정")
                 str = 'curl -X PUT -d \'{"options": ["Comode_Nano"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
 
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -271,14 +271,14 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
 
             case Characteristic.SwingMode.SWING_DISABLED:
                 var body;
-                this.log("무풍모드해제 설정")
+                //this.log("무풍모드해제 설정")
                 str = 'curl -X PUT -d \'{"options": ["Comode_Off"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
  
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -286,7 +286,7 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
@@ -307,12 +307,12 @@ SamsungAirco.prototype = {
                 this.response = this.response.substr(1, this.response.length - 3);
             if (this.response == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
-                this.log("비활성화 확인");
+                //this.log("비활성화 확인");
             } else if (this.response == "On") {
-                this.log("활성화 확인");
+                //this.log("활성화 확인");
                 callback(null, Characteristic.Active.ACTIVE);
             } else
-                this.log(this.response + "연결 오류");
+                //this.log(this.response + "연결 오류");
             }
         }.bind(this));
 
@@ -328,9 +328,9 @@ SamsungAirco.prototype = {
         var activeFuncion = function(state) {
             if (state == Characteristic.Active.ACTIVE) {
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"On"\}}\' https://' + ip + ':8888/devices/0';
-                console.log("활성화 설정");
+                //console.log("활성화 설정");
             } else {
-                console.log("비활성화 설정");
+                //console.log("비활성화 설정");
                 str = 'curl -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + token + '" --cert ' + patchCert + ' --insecure -X PUT -d \'{"Operation" : {\"power"\ : \"Off"\}}\' https://' + ip + ':8888/devices/0';
             }
         }
@@ -340,7 +340,7 @@ SamsungAirco.prototype = {
             if (error) {
             } else {
                 //callback();
-                this.log(stdout);
+                //this.log(stdout);
             }
         }.bind(this));
         callback();
@@ -358,16 +358,16 @@ SamsungAirco.prototype = {
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
                 if (this.response == "CoolClean" || this.response == "Cool") {
-                    this.log("냉방청정모드 확인");                	
+                    //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (this.response == "DryClean" || this.response == "Dry") {
-                    this.log("제습청정모드 확인");                	
+                    //this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (this.response == "Auto" || this.response == "Wind") {
-                	this.log("공기청정모드 확인");
+                    //this.log("공기청정모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
-                    this.log(this.response + "는 설정에 없는 모드 입니다");
+                    //this.log(this.response + "는 설정에 없는 모드 입니다");
                 //callback();
             }
         }.bind(this));
@@ -379,7 +379,7 @@ SamsungAirco.prototype = {
 
             case Characteristic.TargetHeaterCoolerState.AUTO:
                 var body;
-                this.log("공기청정모드로 설정");
+                //this.log("공기청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["Wind"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
     
 		this.execRequest(str, body, function(error, stdout, stderr) {
@@ -387,14 +387,14 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
 
             case Characteristic.TargetHeaterCoolerState.HEAT:
                 var body;
-                this.log("제습청정모드로 설정");
+                //this.log("제습청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["DryClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
 
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -402,14 +402,14 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
                 
             case Characteristic.TargetHeaterCoolerState.COOL:
                 var body;
-                this.log("냉방청정모드로 설정");
+                //this.log("냉방청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["CoolClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
 
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -417,7 +417,7 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
