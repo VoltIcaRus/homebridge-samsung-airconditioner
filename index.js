@@ -53,6 +53,9 @@ SamsungAirco.prototype = {
 
         //현재 모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState)
+	    .setProps({
+                validValues: [AUTO, COOL]
+            })
             .on('get', this.getCurrentHeaterCoolerState.bind(this))       
             .on('set', this.setCurrentHeaterCoolerState.bind(this));
    
