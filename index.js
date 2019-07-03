@@ -237,7 +237,6 @@ SamsungAirco.prototype = {
         var str;
         var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[1]\'';
-        this.log(str);
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
