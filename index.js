@@ -353,7 +353,7 @@ SamsungAirco.prototype = {
             } else {
                 this.response = stdout;
                 this.response = this.response.substr(1, this.response.length - 3);
-                if (this.response == "CoolClean" || this.response == "Cool") {
+                if (this.response == "CoolClean" || this.response == "Cool" || this.response == "Dry" || this.response == "DryClean") {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (this.response == "Auto" || this.response == "Wind") {
