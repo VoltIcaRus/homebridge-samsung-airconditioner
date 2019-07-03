@@ -328,7 +328,7 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
@@ -342,7 +342,7 @@ SamsungAirco.prototype = {
                         callback(error);
                     } else {
                         callback();
-                        this.log(stdout);
+                        //this.log(stdout);
                     }
                 }.bind(this));
                 break;
