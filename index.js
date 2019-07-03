@@ -56,15 +56,15 @@ SamsungAirco.prototype = {
 
         //현재 모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState)
-            .on('set', this.setCurrentHeaterCoolerState.bind(this));       
-          //.on('set', this.setCurrentHeaterCoolerState.bind(this));
+            .on('get', this.getCurrentHeaterCoolerState.bind(this))       
+            .on('set', this.setCurrentHeaterCoolerState.bind(this));
    
         //현재 모드 확인
         this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState) 
             .on('get', this.getCurrentHeaterCoolerState.bind(this));
 
         //냉방모드 온도
-        this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature)
+        this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature) = this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
             .setProps({
                 minValue: 18,
                 maxValue: 30,
@@ -74,14 +74,14 @@ SamsungAirco.prototype = {
             .on('set', this.setHeatingUpOrDwTemperature.bind(this));
 
         //난방모드 온도        
-         this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
-            .setProps({
-                minValue: 18,
-                maxValue: 30,
-                minStep: 1
-            })
-            .on('get', this.getHeatingUpOrDwTemperature.bind(this))
-            .on('set', this.setHeatingUpOrDwTemperature.bind(this)); 
+        // this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
+        //    .setProps({
+        //        minValue: 18,
+        //        maxValue: 30,
+        //        minStep: 1
+        //    })
+        //    .on('get', this.getHeatingUpOrDwTemperature.bind(this))
+        //    .on('set', this.setHeatingUpOrDwTemperature.bind(this)); 
         
         //스윙모드 설정
         this.aircoSamsung.getCharacteristic(Characteristic.SwingMode)
