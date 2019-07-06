@@ -67,8 +67,8 @@ SamsungAirco.prototype = {
                 maxValue: 30,
                 minStep: 1
             })
-            .on('get', this.getCoolingUpOrDwTemperature.bind(this))
-            .on('set', this.setCoolingUpOrDwTemperature.bind(this));
+            .on('get', this.getHeatingUpOrDwTemperature.bind(this))
+            .on('set', this.setHeatingUpOrDwTemperature.bind(this)); 
 
         //난방모드 온도        
          this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature)
@@ -112,41 +112,7 @@ SamsungAirco.prototype = {
 
     //services
 
-
-    getCoolingUpOrDwTemperature: function(callback) {
-        var body;
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].desired\'';
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                callback(error);
-            } else {
-                body = parseInt(stdout);
-                //this.log("희망온도 확인 : " + stdout);
-
-                callback(null, body);
-                //callback();
-            }
-        }.bind(this))
-        //callback(null, null);
-    },
-
-    setCoolingUpOrDwTemperature: function(temp, callback) {
-        var body;
-
-        str = 'curl -X PUT -d \'{"desired": ' + temp + '}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/temperatures/0';
-
-        this.execRequest(str, body, function(error, stdout, stderr) {
-            if (error) {
-                callback(error);
-            } else {
-            	//this.log("희망온도 설정 : " + body);
-                callback(null, temp);
-                //callback();
-            }
-        }.bind(this));
-    },
-	getHeatingUpOrDwTemperature: function(callback) {
+    getHeatingUpOrDwTemperature: function(callback) {
         var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].desired\'';
 
