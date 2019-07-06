@@ -429,14 +429,17 @@ SamsungAirco.prototype = {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
 		    this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(3);
+		    this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).updateValue(2);
                 } else if (this.response == "DryClean" || this.response == "Dry") {
                     //this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
 	            this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(2);
+		    this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).updateValue(1);
                 } else if (this.response == "Auto" || this.response == "Wind") {
                     //this.log("공기청정모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
 	            this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(1);
+		    this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).updateValue(0);
                 } else
                     this.log(this.response + "는 설정에 없는 모드 입니다");
                 //callback();
