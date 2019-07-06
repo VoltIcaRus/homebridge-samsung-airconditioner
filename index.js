@@ -486,7 +486,8 @@ SamsungAirco.prototype = {
                 var body;
                 //this.log("공기청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["Wind"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
-    
+                this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(1);
+			
 		this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
                         callback(error);
@@ -501,7 +502,8 @@ SamsungAirco.prototype = {
                 var body;
                 //this.log("제습청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["DryClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
-
+                this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(2);
+			
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
                         callback(error);
@@ -516,7 +518,8 @@ SamsungAirco.prototype = {
                 var body;
                 //this.log("냉방청정모드로 설정");
                 str = 'curl -X PUT -d \'{"modes": ["CoolClean"]}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/mode';
-
+                this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(3);
+			
                 this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
                         callback(error);
