@@ -165,9 +165,9 @@ SamsungAirco.prototype = {
                 body = parseInt(stdout);
             if (body == 0) {
                 callback(null, 2);
-                this.log("자동풍 확인");
+                //this.log("자동풍 확인");
             } else if (body == 2 || body == 3 || body == 4) {
-                this.log("미풍 등 확인");
+                //this.log("미풍 등 확인");
                 callback(null, 1);
             } else
 		this.log("풍속 확인 오류");
@@ -229,7 +229,6 @@ SamsungAirco.prototype = {
                 this.log("자동청소 확인 오류");
             }
         }.bind(this));
-
     },
     
     setLockPhysicalControls: function(state, callback) {
@@ -343,7 +342,6 @@ SamsungAirco.prototype = {
 		this.log("활성화 확인 오류");
             }
         }.bind(this));
-
     },
 	
     setActive: function(state, callback) {
