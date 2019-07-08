@@ -173,6 +173,7 @@ SamsungAirco.prototype = {
 		this.log("풍속 확인 오류");
             }
         }.bind(this));
+    },
     
     setRotationSpeed: function(state, callback) {
 
