@@ -126,15 +126,14 @@ SamsungAirco.prototype = {
         }.bind(this))
     },
 
-    setTargetTemperature: function(temp, callback) {
-        var body;
-        str = 'curl -X PUT -d \'{"desired": ' + temp + '}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/temperatures/0';
+    setTargetTemperature: function(body, callback) {
+        str = 'curl -X PUT -d \'{"desired": ' + body + '}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/temperatures/0';
 
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
                 callback(error);
             } else {
-                callback(null, temp);
+                callback(null);
               //this.log("희망온도 설정 : " + body);
             }
         }.bind(this));
