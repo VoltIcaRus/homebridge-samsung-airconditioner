@@ -282,7 +282,6 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 body = String(stdout);
-		this.log(body)
             if (body == "Comode_Off") {
                 callback(null, Characteristic.SwingMode.SWING_DISABLED);
                 this.log("무풍모드해제 확인");
@@ -340,7 +339,6 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 body = String(stdout);
-		this.log(body)
             if (body == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
                 this.log("비활성화 확인");
@@ -349,6 +347,7 @@ SamsungAirco.prototype = {
                 callback(null, Characteristic.Active.ACTIVE);
             } else
                 callback(null);
+		this.log("활성화 오류");
             }
         }.bind(this));
 
@@ -395,7 +394,6 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 body = String(stdout);
-		this.log(body)
                 if (body == "CoolClean" || body == "Cool") {
                     this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
@@ -419,18 +417,18 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = String(stdout);
-                if (body == "CoolClean" || body == "Cool") {
+                if (stdout == "CoolClean" || stdout == "Cool") {
                     this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.COOL);
-                } else if (body == "DryClean" || body == "Dry") {
+                } else if (stdout == "DryClean" || stdout == "Dry") {
                     this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.HEAT);
-                } else if (body == "Auto" || body == "Wind") {
+                } else if (stdout == "Auto" || stdout == "Wind") {
                     this.log("공기청정모드 확인");
                     callback(null, Characteristic.TargetHeaterCoolerState.AUTO);
                 } else
                     callback(null);
+		    this.log("모드 오류");      
             }
         }.bind(this));
     },
