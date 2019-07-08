@@ -353,9 +353,9 @@ SamsungAirco.prototype = {
 
     },
 	
-    setActive: function(value, callback) {
+    setActive: function(state, callback) {
 
-        switch (value) {
+        switch (state) {
 
             case Characteristic.Active.ACTIVE:
                 var body;
