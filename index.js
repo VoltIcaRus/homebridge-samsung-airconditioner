@@ -409,6 +409,7 @@ SamsungAirco.prototype = {
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
                     callback(null);
+		    this.log("Current 모드 오류");      
             }
         }.bind(this));
     },
@@ -421,7 +422,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-		body = stdout;
+                body = stdout;
 	        body = body.substr(1, body.length - 3);
                 if (body == "CoolClean" || body == "Cool") {
                     this.log("냉방청정모드 확인");                	
@@ -434,7 +435,7 @@ SamsungAirco.prototype = {
                     callback(null, Characteristic.TargetHeaterCoolerState.AUTO);
                 } else
                     callback(null);
-		    this.log("모드 오류");      
+		    this.log("Target 모드 오류");      
             }
         }.bind(this));
     },
