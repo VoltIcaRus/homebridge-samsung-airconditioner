@@ -225,7 +225,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = stdout;
+                body = String(stdout);
             if (body == "Autoclean_Off") {
                 callback(null, Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED);
                 //this.log("자동청소해제 확인");
@@ -281,7 +281,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = stdout;
+                body = String(stdout);
             if (body == "Comode_Off") {
                 callback(null, Characteristic.SwingMode.SWING_DISABLED);
                 //this.log("무풍모드해제 확인");
@@ -338,7 +338,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = stdout;
+                body = String(stdout);
             if (body == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
                 //this.log("비활성화 확인");
@@ -392,7 +392,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = stdout;
+                body = String(stdout);
                 if (body == "CoolClean" || body == "Cool") {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
@@ -416,7 +416,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = stdout;
+                body = String(stdout);
                 if (body == "CoolClean" || body == "Cool") {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.COOL);
