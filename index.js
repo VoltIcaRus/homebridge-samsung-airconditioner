@@ -1,4 +1,4 @@
-var Service, Characteristic;
+var Service, Characteristic, Accessory;
 var exec2 = require("child_process").exec;
 
 module.exports = function(homebridge) {
