@@ -121,7 +121,7 @@ SamsungAirco.prototype = {
             } else {
                 body = parseInt(stdout);
                 callback(null, body);
-               this.log("희망온도 확인 : " + body);
+                //this.log("희망온도 확인 : " + body);
             }
         }.bind(this))
     },
@@ -134,7 +134,7 @@ SamsungAirco.prototype = {
                 callback(error);
             } else {
                 callback(null);
-              //this.log("희망온도 설정 : " + body);
+                //this.log("희망온도 설정 : " + body);
             }
         }.bind(this));
     },
@@ -149,7 +149,7 @@ SamsungAirco.prototype = {
             } else {
                 body = parseInt(stdout);
                 callback(null, body);
-                this.log("현재 온도: " + body);
+                //this.log("현재 온도: " + body);
             }
         }.bind(this));
     },
@@ -164,7 +164,7 @@ SamsungAirco.prototype = {
             } else {
                 body = 3-parseInt(stdout);
                 callback(null, body);
-                this.log("현재 풍속: " + body);
+                //this.log("현재 풍속: " + body);
             }
         }.bind(this));
     },
@@ -229,12 +229,12 @@ SamsungAirco.prototype = {
 	        body = body.substr(1, body.length - 3);
             if (body == "Autoclean_Off") {
                 callback(null, Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED);
-                this.log("자동청소해제 확인");
+                //this.log("자동청소해제 확인");
             } else if (body == "Autoclean_On") {
-                this.log("자동청소 확인");
+                //this.log("자동청소 확인");
                 callback(null, Characteristic.LockPhysicalControls.CONTROL_LOCK_ENABLED);
             } else
-                callback(null);
+                this.log("자동청소 확인 오류");
             }
         }.bind(this));
 
@@ -349,8 +349,7 @@ SamsungAirco.prototype = {
                 this.log("활성화 확인");
                 callback(null, Characteristic.Active.ACTIVE);
             } else
-                callback(null);
-		this.log("활성화 오류");
+		this.log("활성화 확인 오류");
             }
         }.bind(this));
 
@@ -408,8 +407,7 @@ SamsungAirco.prototype = {
                     this.log("공기청정모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
-                    callback(null);
-		    this.log("Current 모드 오류");      
+		    this.log("현재 모드 확인 오류");      
             }
         }.bind(this));
     },
@@ -434,8 +432,7 @@ SamsungAirco.prototype = {
                     this.log("공기청정모드 확인");
                     callback(null, Characteristic.TargetHeaterCoolerState.AUTO);
                 } else
-                    callback(null);
-		    this.log("Target 모드 오류");      
+		    this.log("목표 모드 확인 오류");      
             }
         }.bind(this));
     },
