@@ -121,7 +121,7 @@ SamsungAirco.prototype = {
             } else {
                 body = parseInt(stdout);
                 callback(null, body);
-               //this.log("희망온도 확인 : " + body);
+               this.log("희망온도 확인 : " + body);
             }
         }.bind(this))
     },
@@ -149,7 +149,7 @@ SamsungAirco.prototype = {
             } else {
                 body = parseInt(stdout);
                 callback(null, body);
-                //this.log("현재 온도: " + body);
+                this.log("현재 온도: " + body);
             }
         }.bind(this));
     },
@@ -164,7 +164,7 @@ SamsungAirco.prototype = {
             } else {
                 body = 3-parseInt(stdout);
                 callback(null, body);
-                //this.log("현재 풍속: " + body);
+                this.log("현재 풍속: " + body);
             }
         }.bind(this));
     },
@@ -228,9 +228,9 @@ SamsungAirco.prototype = {
                 body = String(stdout);
             if (body == "Autoclean_Off") {
                 callback(null, Characteristic.LockPhysicalControls.CONTROL_LOCK_DISABLED);
-                //this.log("자동청소해제 확인");
+                this.log("자동청소해제 확인");
             } else if (body == "Autoclean_On") {
-                //this.log("자동청소 확인");
+                this.log("자동청소 확인");
                 callback(null, Characteristic.LockPhysicalControls.CONTROL_LOCK_ENABLED);
             } else
                 callback(null);
@@ -284,9 +284,9 @@ SamsungAirco.prototype = {
                 body = String(stdout);
             if (body == "Comode_Off") {
                 callback(null, Characteristic.SwingMode.SWING_DISABLED);
-                //this.log("무풍모드해제 확인");
+                this.log("무풍모드해제 확인");
             } else if (body == "Comode_Nano") {
-                //this.log("무풍모드 확인");
+                this.log("무풍모드 확인");
                 callback(null, Characteristic.SwingMode.SWING_ENABLED);
             } else
                 callback(null);
@@ -341,9 +341,9 @@ SamsungAirco.prototype = {
                 body = String(stdout);
             if (body == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
-                //this.log("비활성화 확인");
+                this.log("비활성화 확인");
             } else if (body == "On") {
-                //this.log("활성화 확인");
+                this.log("활성화 확인");
                 callback(null, Characteristic.Active.ACTIVE);
             } else
                 callback(null);
@@ -394,13 +394,13 @@ SamsungAirco.prototype = {
             } else {
                 body = String(stdout);
                 if (body == "CoolClean" || body == "Cool") {
-                    //this.log("냉방청정모드 확인");                	
+                    this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (body == "DryClean" || body == "Dry") {
-                    //this.log("제습청정모드 확인");                	
+                    this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (body == "Auto" || body == "Wind") {
-                    //this.log("공기청정모드 확인");
+                    this.log("공기청정모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
                     callback(null);
@@ -418,13 +418,13 @@ SamsungAirco.prototype = {
             } else {
                 body = String(stdout);
                 if (body == "CoolClean" || body == "Cool") {
-                    //this.log("냉방청정모드 확인");                	
+                    this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.COOL);
                 } else if (body == "DryClean" || body == "Dry") {
-                    //this.log("제습청정모드 확인");                	
+                    this.log("제습청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.HEAT);
                 } else if (body == "Auto" || body == "Wind") {
-                    //this.log("공기청정모드 확인");
+                    this.log("공기청정모드 확인");
                     callback(null, Characteristic.TargetHeaterCoolerState.AUTO);
                 } else
                     callback(null);
