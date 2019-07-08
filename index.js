@@ -94,7 +94,7 @@ SamsungAirco.prototype = {
         this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({
                 minValue: 0,
-                maxValue: 3,
+                maxValue: 2,
                 minStep: 1,
             })
             .on('get', this.getRotationSpeed.bind(this))
@@ -162,18 +162,23 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                body = 3-parseInt(stdout);
-                callback(null, body);
-                //this.log("현재 풍속: " + body);
+                body = parseInt(stdout);
+            if (body == 0) {
+                callback(null, 2);
+                this.log("자동풍 확인");
+            } else if (body == 2 || body == 3 || body == 4) {
+                this.log("미풍 등 확인");
+                callback(null, 1);
+            } else
+		this.log("풍속 확인 오류");
             }
         }.bind(this));
-    },
     
     setRotationSpeed: function(state, callback) {
 
         switch (state) {
 
-            case 3:
+            case 2:
                 var body;
                 //this.log("자동풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
@@ -190,20 +195,6 @@ SamsungAirco.prototype = {
             case 1:
                 var body;
                 //this.log("미풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 1}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
-
-                this.execRequest(str, body, function(error, stdout, stderr) {
-                    if (error) {
-                        callback(error);
-                    } else {
-                        callback(null);
-                    }
-                }.bind(this));
-                break;
-                
-            case 2:
-                var body;
-                //this.log("약풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 2}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
 
                 this.execRequest(str, body, function(error, stdout, stderr) {
@@ -213,7 +204,7 @@ SamsungAirco.prototype = {
                         callback(null);
                     }
                 }.bind(this));
-                break;              
+                break;             
         }
     },
     
@@ -294,7 +285,6 @@ SamsungAirco.prototype = {
 		this.log("무풍모드 확인 오류");
             }
         }.bind(this));
-
     },
     
     setSwingMode: function(state, callback) {
