@@ -126,7 +126,7 @@ SamsungAirco.prototype = {
     },
 
     getHeatingTargetTemperature: function(callback) {
-        const body = this.getCoolingTargetTemperature();
+        const body = this.getCoolingTargetTemperature(value);
 	this.log("희망온도 확인 : " + body);    
         callback(null, body);
     },
