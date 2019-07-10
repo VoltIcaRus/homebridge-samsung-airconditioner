@@ -15,16 +15,6 @@ function SamsungAirco(log, config) {
     this.ip = config["ip"];
     this.token = config["token"];
     this.patchCert = config["patchCert"];
-	
-    this.aircoSamsung.getCharacteristic(Characteristic.Active) = 0;
-    this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature) = 28;
-    this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState) = 2;
-    this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState) = 0;
-    this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature) = 26;
-    this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature) = 26;
-    this.aircoSamsung.getCharacteristic(Characteristic.SwingMode) = 0;
-    this.aircoSamsung.getCharacteristic(Characteristic.LockPhysicalControls) = 1;
-    this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed) = 2;
 }
 
 SamsungAirco.prototype = {
