@@ -348,13 +348,6 @@ SamsungAirco.prototype = {
 	        body = body.substr(1, body.length - 3);
             if (body == "Off") {
                 callback(null, Characteristic.Active.INACTIVE);
-	        this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).updateValue(2);
-                this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(0);
-                this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(26);
-                this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(26);
-                this.aircoSamsung.getCharacteristic(Characteristic.SwingMode).updateValue(0);
-                this.aircoSamsung.getCharacteristic(Characteristic.LockPhysicalControls).updateValue(1);
-                this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(2);
                 //this.log("비활성화 확인");
             } else if (body == "On") {
                 //this.log("활성화 확인");
