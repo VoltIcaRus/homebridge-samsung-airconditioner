@@ -104,8 +104,6 @@ SamsungAirco.prototype = {
             .setCharacteristic(Characteristic.Manufacturer, 'Samsung')
             .setCharacteristic(Characteristic.Model, 'Air conditioner')
             .setCharacteristic(Characteristic.SerialNumber, 'AF16K7970WFN');
-	    
-	    
         return [informationService, this.aircoSamsung];
     },
 
