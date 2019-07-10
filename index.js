@@ -27,7 +27,7 @@ SamsungAirco.prototype = {
     },
     identify: function(callback) {
         this.log("장치 확인됨");
-        callback(null); // success
+        callback(); // success
     },
 
     getServices: function() {
@@ -136,7 +136,7 @@ SamsungAirco.prototype = {
             if (error) {
                 callback(error);
             } else {
-                callback(null);
+                callback();
                 //this.log("희망온도 설정 : " + body);
             }
         }.bind(this));
@@ -194,7 +194,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -209,7 +209,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;             
@@ -253,7 +253,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -268,7 +268,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -312,7 +312,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -327,7 +327,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -371,7 +371,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -385,7 +385,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -459,7 +459,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -475,7 +475,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
@@ -491,7 +491,7 @@ SamsungAirco.prototype = {
                     if (error) {
                         callback(error);
                     } else {
-                        callback(null);
+                        callback();
                     }
                 }.bind(this));
                 break;
