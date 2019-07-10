@@ -66,7 +66,7 @@ SamsungAirco.prototype = {
                 maxValue: 30,
                 minStep: 1
             })
-            .on('get', this.getTargetTemperature.bind(this))
+            .on('get', this.getCoolingTargetTemperature.bind(this))
             .on('set', this.setTargetTemperature.bind(this)); 
 
         //난방모드 온도        
@@ -76,7 +76,7 @@ SamsungAirco.prototype = {
                 maxValue: 30,
                 minStep: 1
             })
-            .on('get', this.getTargetTemperature.bind(this))
+            .on('get', this.getHeatingTargetTemperature.bind(this))
             .on('set', this.setTargetTemperature.bind(this)); 
         
         //스윙모드 설정
@@ -109,7 +109,7 @@ SamsungAirco.prototype = {
 
     //services
 
-    getTargetTemperature: function(callback) {
+    getCoolingTargetTemperature: function(callback) {
         var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].desired\'';
@@ -125,6 +125,14 @@ SamsungAirco.prototype = {
         }.bind(this))
     },
 
+    getHeatingTargetTemperature: function(callback) {
+	var body;
+        body = this.getCoolingTargetTemperature();
+	    
+        callback(null, body);
+    },
+	
+	
     setTargetTemperature: function(body, callback) {
 	var str;
 	var body;
