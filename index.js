@@ -112,6 +112,10 @@ SamsungAirco.prototype = {
     //services
 
     getTargetTemperature: function(callback) {
+
+	this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(26);
+        this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(26);
+	    
         var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].desired\'';
@@ -143,6 +147,9 @@ SamsungAirco.prototype = {
     },
     
     getCurrentTemperature: function(callback) {
+
+	this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(28);
+	    
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Temperatures[0].current\'';
@@ -159,6 +166,9 @@ SamsungAirco.prototype = {
     },
 
     getRotationSpeed: function(callback) {
+	    
+        this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(2);	 
+	    
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Wind.speedLevel\'';
@@ -217,6 +227,9 @@ SamsungAirco.prototype = {
     },
     
     getLockPhysicalControls: function(callback) {
+	    
+        this.aircoSamsung.getCharacteristic(Characteristic.LockPhysicalControls).updateValue(1);	    
+	    
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[3]\'';
@@ -276,6 +289,9 @@ SamsungAirco.prototype = {
     },
 	
     getSwingMode: function(callback) {
+
+        this.aircoSamsung.getCharacteristic(Characteristic.SwingMode).updateValue(0);	
+	    
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[1]\'';
@@ -335,6 +351,9 @@ SamsungAirco.prototype = {
     },
     
     getActive: function(callback) {
+	
+	this.aircoSamsung.getCharacteristic(Characteristic.Active).updateValue(0);
+	    
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Operation.power\'';
@@ -393,6 +412,9 @@ SamsungAirco.prototype = {
     },
 
     getCurrentHeaterCoolerState: function(callback) {
+
+	this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(0);
+	    
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
@@ -419,6 +441,9 @@ SamsungAirco.prototype = {
     },
 	
      getTargetHeaterCoolerState: function(callback) {
+	     
+        this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).updateValue(2);	     
+	     
 	var str;
 	var body;
         str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.modes[0]\'';
