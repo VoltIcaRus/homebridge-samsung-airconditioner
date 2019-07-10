@@ -1,3 +1,5 @@
+
+
 var Service, Characteristic, Accessory;
 var exec2 = require("child_process").exec;
 
@@ -15,6 +17,17 @@ function SamsungAirco(log, config) {
     this.ip = config["ip"];
     this.token = config["token"];
     this.patchCert = config["patchCert"];
+
+    this.aircoSamsung.getCharacteristic(Characteristic.Active).updateValue(0);
+    this.aircoSamsung.getCharacteristic(Characteristic.CurrentTemperature).updateValue(28);
+    this.aircoSamsung.getCharacteristic(Characteristic.TargetHeaterCoolerState).updateValue(2);
+    this.aircoSamsung.getCharacteristic(Characteristic.CurrentHeaterCoolerState).updateValue(0);
+    this.aircoSamsung.getCharacteristic(Characteristic.CoolingThresholdTemperature).updateValue(26);
+    this.aircoSamsung.getCharacteristic(Characteristic.HeatingThresholdTemperature).updateValue(26);
+    this.aircoSamsung.getCharacteristic(Characteristic.SwingMode).updateValue(0);
+    this.aircoSamsung.getCharacteristic(Characteristic.LockPhysicalControls).updateValue(1);
+    this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed).updateValue(2);
+
 }
 
 SamsungAirco.prototype = {
