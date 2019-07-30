@@ -94,7 +94,7 @@ SamsungAirco.prototype = {
         this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({
                 minValue: 0,
-                maxValue: 6,
+                maxValue: 5,
                 minStep: 1,
             })
             .on('get', this.getRotationSpeed.bind(this))
@@ -184,7 +184,7 @@ SamsungAirco.prototype = {
 
         switch (state) {
 
-            case 6:
+            case 5:
 	        var str;
 	        var body;
                 //this.log("터보풍 설정")
@@ -199,7 +199,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;
 
-            case 5:
+            case 4:
 	        var str;
 	        var body;
                 //this.log("강풍 설정")
@@ -213,22 +213,7 @@ SamsungAirco.prototype = {
                     }
                 }.bind(this));
                 break; 
- 
-            case 4:
-	        var str;
-	        var body;
-                //this.log("중풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 2}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
- 
-	        this.execRequest(str, body, function(error, stdout, stderr) {
-                    if (error) {
-                        callback(error);
-                    } else {
-                        callback();
-                    }
-                }.bind(this));
-                break;
-           
+			
             case 3:
 	        var str;
 	        var body;
@@ -452,11 +437,11 @@ SamsungAirco.prototype = {
                 if (body == "CoolClean" || body == "Cool") {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (body == "DryClean" || body == "Dry") {
-                    //this.log("제습청정모드 확인");                	
+                } else if (body == "Wind" || body == "Wind") {
+                    //this.log("공기청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (body == "Auto" || body == "Auto") {
-                   // this.log("공기청정모드 확인");
+                   // this.log("스마트쾌적모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.IDLE);
                 } else
 		    this.log("현재 모드 확인 오류");      
@@ -478,11 +463,11 @@ SamsungAirco.prototype = {
                 if (body == "CoolClean" || body == "Cool") {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.COOL);
-                } else if (body == "DryClean" || body == "Dry") {
-                    //this.log("제습청정모드 확인");                	
+                } else if (body == "Wind" || body == "Wind") {
+                    //this.log("공기청정모드 확인");                	
                     callback(null, Characteristic.TargetHeaterCoolerState.HEAT);
-                } else if (body == "Auto" || body == "Wind") {
-                    //this.log("공기청정모드 확인");
+                } else if (body == "Auto" || body == "Auto") {
+                    //this.log("스마트쾌적모드 확인");
                     callback(null, Characteristic.TargetHeaterCoolerState.AUTO);
                 } else
 		    this.log("목표 모드 확인 오류");      
