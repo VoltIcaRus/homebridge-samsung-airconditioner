@@ -94,7 +94,7 @@ SamsungAirco.prototype = {
         this.aircoSamsung.getCharacteristic(Characteristic.RotationSpeed)
             .setProps({
                 minValue: 0,
-                maxValue: 5,
+                maxValue: 6,
                 minStep: 1,
             })
             .on('get', this.getRotationSpeed.bind(this))
@@ -184,22 +184,7 @@ SamsungAirco.prototype = {
 
         switch (state) {
 
-            case 5:
-	        var str;
-	        var body;
-                //this.log("자동풍 설정")
-                str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
- 
-	        this.execRequest(str, body, function(error, stdout, stderr) {
-                    if (error) {
-                        callback(error);
-                    } else {
-                        callback();
-                    }
-                }.bind(this));
-                break;
-
-            case 4:
+            case 6:
 	        var str;
 	        var body;
                 //this.log("터보풍 설정")
@@ -214,7 +199,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;
 
-            case 3:
+            case 5:
 	        var str;
 	        var body;
                 //this.log("강풍 설정")
@@ -229,7 +214,7 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break; 
  
-            case 2:
+            case 4:
 	        var str;
 	        var body;
                 //this.log("중풍 설정")
@@ -244,11 +229,26 @@ SamsungAirco.prototype = {
                 }.bind(this));
                 break;
            
-            case 1:
+            case 3:
 	        var str;
 	        var body;
                 //this.log("미풍 설정")
                 str = 'curl -X PUT -d \'{"speedLevel": 1}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
+ 
+	        this.execRequest(str, body, function(error, stdout, stderr) {
+                    if (error) {
+                        callback(error);
+                    } else {
+                        callback();
+                    }
+                }.bind(this));
+                break;
+
+	    case 2:
+	        var str;
+	        var body;
+                //this.log("자동풍 설정")
+                str = 'curl -X PUT -d \'{"speedLevel": 0}\' -v -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure https://' + this.ip + ':8888/devices/0/wind';
  
 	        this.execRequest(str, body, function(error, stdout, stderr) {
                     if (error) {
