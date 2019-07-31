@@ -459,14 +459,17 @@ SamsungAirco.prototype = {
             } else {
                 body = stdout;
 	        body = body.substr(1, body.length - 3);
-                if (body == "Comode_Speed") {
-                    //this.log("스피드운전모드 확인");                	
+                if (body == "Comode_off") {
+                    //this.log("특수운전모드해제 확인");                	
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else if (body == "Comode_Speed") {
+                    //this.log("스피드모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (body == "Comode_Quiet") {
-                    //this.log("정숙모드 확인");                	
+                   // this.log("정숙모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (body == "Comode_Sleep") {
-                   // this.log("열대야 쾌면모드 확인");
+		} else if (body == "Comode_Sleep") {
+                    //this.log("열대아쾌면모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else
 		    this.log("특수 모드 확인 오류");      
