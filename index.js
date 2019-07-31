@@ -459,7 +459,7 @@ SamsungAirco.prototype = {
             } else {
                 body = stdout;
 	        body = body.substr(1, body.length - 3);
-                if (body == "Comode_off") {
+                if (body == "Comode_Off") {
                     //this.log("특수운전모드해제 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else if (body == "Comode_Speed") {
