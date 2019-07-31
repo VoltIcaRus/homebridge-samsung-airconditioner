@@ -448,6 +448,31 @@ SamsungAirco.prototype = {
             }
         }.bind(this));
     },
+	getCurrentHeaterCoolerState: function(callback) {
+	var str;
+	var body;
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[0]\'';
+ 
+        this.execRequest(str, body, function(error, stdout, stderr) {
+            if (error) {
+                callback(error);
+            } else {
+                body = stdout;
+	        body = body.substr(1, body.length - 3);
+                if (body == "Comode_Speed" || body == "Cool") {
+                    //this.log("스피드운전모드 확인");                	
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else if (body == "Comode_Quiet" || body == "Cool") {
+                    //this.log("정숙모드 확인");                	
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else if (body == "Comode_Sleep" || body == "Cool") {
+                   // this.log("열대야 쾌면모드 확인");
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+                } else
+		    this.log("특수 모드 확인 오류");      
+            }
+        }.bind(this));
+    },
 	
      getTargetHeaterCoolerState: function(callback) {
 	var str;
