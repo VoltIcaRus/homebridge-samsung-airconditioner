@@ -317,7 +317,7 @@ SamsungAirco.prototype = {
             } else {
                 body = stdout;
 	        body = body.substr(1, body.length - 3);
-            if (body == "Comode_Off") {
+            if (body == "Comode_Off" || body == "Comode_Speed" || body == "Comode_Quiet" || body == "Comode_Sleep") {
                 callback(null, Characteristic.SwingMode.SWING_DISABLED);
                 //this.log("무풍모드해제 확인");
             } else if (body == "Comode_Nano" || body == "Comode_NanoSleep") {
