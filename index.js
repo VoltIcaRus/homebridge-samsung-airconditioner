@@ -471,6 +471,12 @@ SamsungAirco.prototype = {
 		} else if (body == "Comode_Sleep") {
                     //this.log("열대아쾌면모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+		} else if (body == "Comode_Nano") {
+                    //this.log("무풍모드 확인");                	
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
+		} else if (body == "Comode_NanoSleep") {
+                    //this.log("열대야수면무풍모드 확인");                	
+                    callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else
 		    this.log("특수 모드 확인 오류");      
             }
