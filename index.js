@@ -320,7 +320,7 @@ SamsungAirco.prototype = {
             if (body == "Comode_Off") {
                 callback(null, Characteristic.SwingMode.SWING_DISABLED);
                 //this.log("무풍모드해제 확인");
-            } else if (body == "Comode_Nano") {
+            } else if (body == "Comode_Nano" || body == "Comode_NanoSleep") {
                 //this.log("무풍모드 확인");
                 callback(null, Characteristic.SwingMode.SWING_ENABLED);
             } else
@@ -437,8 +437,8 @@ SamsungAirco.prototype = {
                 if (body == "CoolClean" || body == "Cool") {
                     //this.log("냉방청정모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (body == "Wind" || body == "Wind") {
-                    //this.log("공기청정모드 확인");                	
+                } else if (body == "Wind" || body == "DryClean" || body == "Dry") {
+                    //this.log("공기청정 제습모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.HEATING);
                 } else if (body == "Auto" || body == "Auto") {
                    // this.log("스마트쾌적모드 확인");
@@ -448,10 +448,10 @@ SamsungAirco.prototype = {
             }
         }.bind(this));
     },
-	getCurrentHeaterCoolerState: function(callback) {
+   	getCurrentHeaterCoolerState: function(callback) {
 	var str;
 	var body;
-        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[0]\'';
+        str = 'curl -s -k -H "Content-Type: application/json" -H "Authorization: Bearer ' + this.token + '" --cert ' + this.patchCert + ' --insecure -X GET https://' + this.ip + ':8888/devices|jq \'.Devices[1].Mode.options[1]\'';
  
         this.execRequest(str, body, function(error, stdout, stderr) {
             if (error) {
@@ -459,13 +459,13 @@ SamsungAirco.prototype = {
             } else {
                 body = stdout;
 	        body = body.substr(1, body.length - 3);
-                if (body == "Comode_Speed" || body == "Cool") {
+                if (body == "Comode_Speed") {
                     //this.log("스피드운전모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (body == "Comode_Quiet" || body == "Cool") {
+                } else if (body == "Comode_Quiet") {
                     //this.log("정숙모드 확인");                	
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
-                } else if (body == "Comode_Sleep" || body == "Cool") {
+                } else if (body == "Comode_Sleep") {
                    // this.log("열대야 쾌면모드 확인");
                     callback(null, Characteristic.CurrentHeaterCoolerState.COOLING);
                 } else
