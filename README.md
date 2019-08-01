@@ -10,4 +10,4 @@ https://github.com/Km81/homebridge-samsung-airconditioner
 
 
 터보 강풍 중풍 미풍 오토 추가 
-원본에 없는모드 진입하면 뒤지는 문제 해결 
+원본에 없는모드 진입하면 개복치되는 문제 해결 
